@@ -10,7 +10,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class QiwiStarterProps {
     private String helloMessage;
-    private int version;
-    private String productName;
+
+    private String ravenDestination;
+
+    private String exceptionPackageName;
 
 }
