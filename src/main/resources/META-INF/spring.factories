@@ -2,3 +2,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
   com.qiwi.qiwistarter.QiwiStarterConfig,com.qiwi.qiwistarter.ExceptionHandlingQiwiConfig
 
 org.springframework.context.ApplicationContextInitializer = com.qiwi.qiwistarter.ProfileDetectorApplicationContextInitializer
+org.springframework.boot.env.EnvironmentPostProcessor = com.qiwi.qiwistarter.epp.QiwiStarterEPP
