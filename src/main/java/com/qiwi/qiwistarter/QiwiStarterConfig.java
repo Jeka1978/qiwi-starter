@@ -1,15 +1,19 @@
 package com.qiwi.qiwistarter;
 
 import com.qiwi.qiwistarter.aop.ExceptionHandlerAspect;
+import com.qiwi.qiwistarter.aop.ExceptionHandlingCustomPointcut;
 import com.qiwi.qiwistarter.bpp.InjectRandomHeroBeanPostProcessor;
 import com.qiwi.qiwistarter.services.HelloWorldService;
 import com.qiwi.qiwistarter.services.QiwiStatusService;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Evgeny Borisov
@@ -20,14 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy
 public class QiwiStarterConfig {
 
-    @Bean
-    @ConditionalOnProduction
-    @ConditionalOnProperty(value = "qiwistarter.raven-destination")
-//    @ConditionalOnProperty(value = "qiwistarter.exception-package-name")
-    //todo find solution for making composite condition (exceptionHandlerAspect should be created only in case both conditions are true
-    public ExceptionHandlerAspect exceptionHandlerAspect() {
-        return new ExceptionHandlerAspect();
-    }
+
 
     @Bean
     public InjectRandomHeroBeanPostProcessor injectRandomHeroBeanPostProcessor() {
@@ -45,3 +42,4 @@ public class QiwiStarterConfig {
         return new QiwiStatusService();
     }
 }
+

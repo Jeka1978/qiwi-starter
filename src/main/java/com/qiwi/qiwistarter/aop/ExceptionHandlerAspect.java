@@ -1,33 +1,43 @@
 package com.qiwi.qiwistarter.aop;
 
-import com.qiwi.qiwistarter.QiwiStarterProps;
 import com.qiwi.qiwistarter.model.NotEnoughMoneyException;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
+import com.qiwi.qiwistarter.services.RavenSenderExceptionInformator;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
+import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * @author Evgeny Borisov
  */
-@Aspect
-public class ExceptionHandlerAspect {
+
+public class ExceptionHandlerAspect implements MethodInterceptor {
+
+
+    private Map<NotEnoughMoneyException, Void> cache = new WeakHashMap<>();
     @Autowired
-    private QiwiStarterProps qiwiStarterProps;
-
-    private HashMap<NotEnoughMoneyException, Void> cache = new HashMap<>();
+    private RavenSenderExceptionInformator raven;
 
 
-    //TODO PACKAGE NAME SHOULD BE TAKEN FROM application.yaml of project
-    @AfterThrowing(pointcut = "execution(* com.qiwi..*.*(..))", throwing = "ex")
-    public void handleNotEnoughMoneyException(NotEnoughMoneyException ex) {
-        if (!cache.containsKey(ex)) {
-            cache.put(ex, null);
-            System.out.println("raven sent to " + qiwiStarterProps.getRavenDestination());
-            System.out.println(ex.getMessage());
+
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+
+        Object retVal;
+        try {
+            retVal = invocation.proceed();
+        } catch (NotEnoughMoneyException ex) {
+            if (!cache.containsKey(ex)) {
+                cache.put(ex, null);
+                raven.inform(ex);
+            }
+            throw ex;
         }
+
+        return retVal;
     }
-
-
 }
+

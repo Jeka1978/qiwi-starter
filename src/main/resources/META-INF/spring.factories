@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.qiwi.qiwistarter.QiwiStarterConfig,com.qiwi.qiwistarter.MyStarterConfig2
+  com.qiwi.qiwistarter.QiwiStarterConfig,com.qiwi.qiwistarter.ExceptionHandlingQiwiConfig
